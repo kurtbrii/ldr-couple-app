@@ -1,0 +1,87 @@
+<!doctype html>
+<!--
+  index.html
+
+  Entry point for the LDR Couples App clickable prototype.
+  Loads React, ReactDOM, htm (JSX-like templates without a build step) and Tailwind
+  from CDN, then loads the prototype's own scripts in dependency order:
+
+    theme → photos → data → components → navigation → screens/* → app
+
+  Every script attaches what it exports to the global `window.LDR` namespace, so
+  files can be opened straight from disk (file://) with no bundler or local server.
+  (Babel-standalone is intentionally NOT used: Chrome blocks it from fetching
+  external .jsx files over file://, which would break double-click-to-open.)
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#F7F1E6" />
+  <title>Hunt · a shared story</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind theme mirrors the locked palette in js/theme.js (HANDOFF §2).
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#F7F1E6',
+            ivory: '#FFF9F0',
+            rose: '#C9827D',
+            terracotta: '#B9684F',
+            sage: '#8D9B83',
+            butter: '#E7C96B',
+            ink: '#3D3530',
+            muted: '#887970',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            serif: ['Fraunces', 'Georgia', 'serif'],
+            hand: ['Caveat', 'cursive'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="stylesheet" href="css/theme.css" />
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
+
+  <script src="js/theme.js"></script>
+  <script src="js/photos.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/navigation.js"></script>
+
+  <script src="js/screens/welcome.js"></script>
+  <script src="js/screens/entry.js"></script>
+  <script src="js/screens/today.js"></script>
+  <script src="js/screens/hunt.js"></script>
+  <script src="js/screens/waiting.js"></script>
+  <script src="js/screens/reveal.js"></script>
+  <script src="js/screens/add-to-story.js"></script>
+  <script src="js/screens/our-story.js"></script>
+  <script src="js/screens/memory-page.js"></script>
+  <script src="js/screens/editor.js"></script>
+  <script src="js/screens/shop.js"></script>
+  <script src="js/screens/missed.js"></script>
+  <script src="js/screens/us.js"></script>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

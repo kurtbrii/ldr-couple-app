@@ -1,0 +1,447 @@
+/*
+  theme.css
+
+  Global look & feel for the prototype:
+    1. Design tokens (CSS custom properties) — the locked palette from HANDOFF §2.
+    2. The desk backdrop + phone frame (≈400px on desktop, full-bleed on phones).
+    3. Paper grain & texture (HANDOFF §3 — a hard requirement on every surface).
+    4. Shared surface helpers: paper cards, polaroids, washi tape, buttons.
+    5. Motion: stack transitions, 3D card flip, coin pop, sparkle, compose, stickers.
+
+  Used by: index.html (loaded once, before any script).
+*/
+
+/* ---------------------------------------------------------------- 1. Tokens */
+:root {
+  --cream: #F7F1E6;      /* Paper Cream — app background */
+  --ivory: #FFF9F0;      /* Warm Ivory — cards & surfaces */
+  --rose: #C9827D;       /* Dusty Rose — emotion only */
+  --terracotta: #B9684F; /* Terracotta — primary actions only */
+  --sage: #8D9B83;       /* Sage — calm / secondary */
+  --butter: #E7C96B;     /* Butter Yellow — coins only */
+  --ink: #3D3530;        /* Ink Brown — primary text */
+  --muted: #887970;      /* Muted Brown — secondary text */
+
+  /* Warm, brown-tinted shadows — never neutral gray. */
+  --shadow-soft: 0 1px 2px rgba(61, 53, 48, 0.06), 0 6px 18px -6px rgba(92, 64, 44, 0.18);
+  --shadow-card: 0 2px 4px rgba(61, 53, 48, 0.06), 0 14px 32px -12px rgba(92, 64, 44, 0.32);
+  --shadow-print: 0 1px 1px rgba(61, 53, 48, 0.08), 0 8px 20px -8px rgba(92, 64, 44, 0.35);
+
+  /* Film grain: fractal noise tinted ink-brown. Tiled at 180px. */
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.24 0 0 0 0 0.2 0 0 0 0 0.17 0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  /* Paper mottling: low-frequency blotches that read as fibre / uneven pulp. */
+  --mottle: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='800'><filter id='m'><feTurbulence type='fractalNoise' baseFrequency='0.01 0.015' numOctaves='3' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.42 0 0 0 0 0.3 0 0 0 0.32 -0.1'/></filter><rect width='100%' height='100%' filter='url(%23m)'/></svg>");
+  /* Softer, larger mottling for small ivory surfaces (cards, rows, sheets). */
+  --mottle-soft: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='800'><filter id='ms'><feTurbulence type='fractalNoise' baseFrequency='0.006 0.009' numOctaves='3' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.42 0 0 0 0 0.3 0 0 0 0.16 -0.05'/></filter><rect width='100%' height='100%' filter='url(%23ms)'/></svg>");
+  /* Long horizontal fibres for cardstock (card backs, scrapbook pages). */
+  --fibre: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='0.01 0.4' numOctaves='2' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.4 0 0 0 0 0.3 0 0 0 0.3 -0.1'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>");
+
+  --ease-paper: cubic-bezier(0.22, 0.9, 0.3, 1);     /* settles like paper landing */
+  --ease-spring: cubic-bezier(0.34, 1.45, 0.5, 1);   /* small, warm overshoot */
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  /* The "desk" the phone sits on: warm linen with grain + soft vignette. */
+  background:
+    radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(92, 64, 44, 0.18) 100%),
+    var(--grain),
+    #E8DDCB;
+  background-size: auto, 180px 180px, auto;
+}
+
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 3px; border-radius: 10px; }
+
+.font-serif { font-family: 'Fraunces', Georgia, serif; font-optical-sizing: auto; }
+.font-hand { font-family: 'Caveat', cursive; }
+
+/* -------------------------------------------------------- 2. Phone frame */
+.stage {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.phone {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: min(860px, calc(100vh - 48px));
+  min-height: 640px;
+  border-radius: 46px;
+  overflow: hidden;
+  background: var(--cream);
+  isolation: isolate;
+  box-shadow:
+    0 0 0 10px #2F2925,
+    0 0 0 11px #4A403A,
+    0 40px 80px -20px rgba(61, 40, 28, 0.55),
+    0 18px 30px -18px rgba(61, 40, 28, 0.5);
+}
+
+/* Fake dynamic island so the frame reads as a phone on desktop. */
+.phone::before {
+  content: '';
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  width: 104px;
+  height: 30px;
+  transform: translateX(-50%);
+  background: #1F1A17;
+  border-radius: 20px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* On an actual phone the browser IS the frame: go full-bleed. */
+@media (max-width: 480px) {
+  .stage { padding: 0; align-items: stretch; }
+  .phone {
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .phone::before { display: none; }
+}
+
+/* Status bar row (time / signal) — decorative, desktop only. */
+.status-bar {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 50px;
+  padding: 16px 30px 0 34px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  z-index: 90;
+  pointer-events: none;
+}
+@media (max-width: 480px) { .status-bar { display: none; } }
+
+/* Space every screen leaves for the status bar / island. */
+.safe-top { padding-top: 54px; }
+@media (max-width: 480px) { .safe-top { padding-top: max(18px, env(safe-area-inset-top)); } }
+
+/* --------------------------------------------------- 3. Grain & texture */
+
+/* Background paper: cream + mottling + vignette + grain overlay (::after). */
+.paper-bg {
+  background-color: var(--cream);
+  background-image:
+    radial-gradient(130% 100% at 50% 30%, transparent 60%, rgba(139, 101, 70, 0.10) 100%),
+    var(--mottle);
+  background-size: auto, cover;
+  background-repeat: no-repeat;
+}
+
+/* .grain adds a film-grain layer on top of anything (multiply keeps it warm). */
+.grain { position: relative; isolation: isolate; }
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  background-size: 180px 180px;
+  opacity: 0.075;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+.grain-strong::after { opacity: 0.12; }
+.grain-soft::after { opacity: 0.05; }
+
+/* Ivory card surface. */
+.surface {
+  background-color: var(--ivory);
+  background-image: var(--mottle-soft);
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 18px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(136, 121, 112, 0.12);
+}
+
+/* Cardstock: fibres + mottling for card backs and scrapbook pages. */
+.cardstock {
+  background-image:
+    var(--fibre),
+    var(--mottle);
+  background-size: 300px 300px, cover;
+  background-repeat: repeat, no-repeat;
+}
+
+/* ------------------------------------------------- 4. Shared surfaces */
+
+/* Polaroid print: white-warm border, thicker bottom lip, warm shadow. */
+.print {
+  background: #FFFDF8;
+  padding: 7px 7px 26px;
+  box-shadow: var(--shadow-print);
+  border-radius: 2px;
+  position: relative;
+}
+.print-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: #EADFCF;
+  filter: saturate(0.88) contrast(0.98) sepia(0.08);
+}
+/* A faint inner shadow so the photo looks printed into the paper. */
+.print-photo { position: relative; overflow: hidden; }
+.print-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 1px rgba(61, 53, 48, 0.06), inset 0 0 18px rgba(61, 40, 28, 0.12);
+  background-image: var(--grain);
+  background-size: 180px 180px;
+  opacity: 0.55;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+/* Washi tape strip: translucent, slightly jagged ends. */
+.washi {
+  position: absolute;
+  height: 20px;
+  opacity: 0.86;
+  box-shadow: 0 1px 2px rgba(61, 53, 48, 0.12);
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='20' preserveAspectRatio='none'><path d='M2 0 L98 0 L100 3 L98 6 L100 10 L98 14 L100 17 L98 20 L2 20 L0 17 L2 14 L0 10 L2 6 L0 3 Z' fill='black'/></svg>");
+  -webkit-mask-size: 100% 100%;
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='20' preserveAspectRatio='none'><path d='M2 0 L98 0 L100 3 L98 6 L100 10 L98 14 L100 17 L98 20 L2 20 L0 17 L2 14 L0 10 L2 6 L0 3 Z' fill='black'/></svg>");
+  mask-size: 100% 100%;
+  z-index: 3;
+}
+
+/* Paper photo corner (the little black triangle album corners, in ink-brown). */
+.photo-corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: linear-gradient(135deg, rgba(61, 53, 48, 0.82) 50%, transparent 50%);
+  z-index: 3;
+}
+
+/* Primary button — terracotta, pressed-paper feel. */
+.btn-primary {
+  background-color: var(--terracotta);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.03));
+  color: #FFF9F0;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-radius: 16px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 8px 18px -8px rgba(185, 104, 79, 0.7);
+  transition: transform 180ms var(--ease-paper), box-shadow 180ms, filter 180ms;
+}
+.btn-primary:hover { filter: brightness(1.03); }
+.btn-primary:active { transform: translateY(1px) scale(0.985); box-shadow: 0 3px 8px -4px rgba(185, 104, 79, 0.7); }
+.btn-primary:disabled { filter: saturate(0.5) opacity(0.6); cursor: default; }
+
+.btn-secondary {
+  background: rgba(255, 249, 240, 0.7);
+  border: 1px solid rgba(136, 121, 112, 0.28);
+  color: var(--ink);
+  font-weight: 500;
+  border-radius: 16px;
+  transition: transform 180ms var(--ease-paper), background 180ms;
+}
+.btn-secondary:active { transform: scale(0.985); background: var(--ivory); }
+
+/* Coin token — butter-yellow, minted edge. */
+.coin-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #F0D88A, var(--butter));
+  color: #5C4A1E;
+  font-weight: 600;
+  font-size: 13px;
+  box-shadow: inset 0 -1px 0 rgba(120, 90, 20, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 2px 6px -2px rgba(150, 115, 30, 0.45);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hide scrollbars inside the phone while keeping scroll. */
+.scroll { overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.scroll::-webkit-scrollbar { display: none; }
+.hscroll { overflow-x: auto; scrollbar-width: none; }
+.hscroll::-webkit-scrollbar { display: none; }
+
+/* Dotted rule — stationery divider. */
+.rule-dotted { border: 0; height: 1px; background-image: linear-gradient(90deg, rgba(136, 121, 112, 0.45) 40%, transparent 40%); background-size: 6px 1px; }
+
+/* ---------------------------------------------------------- 5. Motion */
+
+/* Stack navigation: push slides in from the right, the old screen drifts left. */
+.screen {
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+.screen-hidden { visibility: hidden; pointer-events: none; }
+
+@keyframes push-in { from { transform: translateX(100%); box-shadow: -20px 0 40px -20px rgba(61, 40, 28, 0); } to { transform: translateX(0); box-shadow: -20px 0 40px -20px rgba(61, 40, 28, 0.35); } }
+@keyframes push-out { from { transform: translateX(0); filter: brightness(1); } to { transform: translateX(-28%); filter: brightness(0.94); } }
+@keyframes pop-in { from { transform: translateX(-28%); filter: brightness(0.94); } to { transform: translateX(0); filter: brightness(1); } }
+@keyframes pop-out { from { transform: translateX(0); } to { transform: translateX(100%); } }
+@keyframes sheet-in { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes sheet-out { from { transform: translateY(0); } to { transform: translateY(100%); } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.anim-push-in { animation: push-in 420ms var(--ease-paper) both; z-index: 2; }
+.anim-push-out { animation: push-out 420ms var(--ease-paper) both; z-index: 1; }
+.anim-pop-in { animation: pop-in 380ms var(--ease-paper) both; z-index: 1; }
+.anim-pop-out { animation: pop-out 380ms var(--ease-paper) both; z-index: 2; }
+.anim-sheet-in { animation: sheet-in 460ms var(--ease-paper) both; z-index: 2; }
+.anim-sheet-out { animation: sheet-out 380ms var(--ease-paper) both; z-index: 2; }
+.anim-fade-in { animation: fade-in 420ms ease both; z-index: 2; }
+.anim-fade-out { animation: fade-out 380ms ease both; z-index: 1; }
+.anim-still { z-index: 1; }
+
+.fade-up { animation: fade-up 520ms var(--ease-paper) both; }
+.fade-in { animation: fade-in 500ms ease both; }
+
+/* Tab bar slides away when drilling into a stack. */
+.tabbar { transition: transform 380ms var(--ease-paper), opacity 300ms ease; }
+.tabbar-hidden { transform: translateY(110%); opacity: 0; pointer-events: none; }
+
+/* 3D card flip — the signature interaction. */
+.flip-scene { perspective: 1400px; }
+.flip-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 1100ms cubic-bezier(0.3, 0.05, 0.2, 1);
+}
+.flip-card.is-flipped { transform: rotateY(180deg); }
+.flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.flip-back { transform: rotateY(180deg); }
+
+/* While turning, the card lifts slightly off the table. */
+@keyframes flip-lift {
+  0% { transform: translateY(0) scale(1); }
+  45% { transform: translateY(-14px) scale(1.04); }
+  100% { transform: translateY(0) scale(1); }
+}
+.flip-lift { animation: flip-lift 1100ms cubic-bezier(0.3, 0.05, 0.2, 1) both; }
+
+/* Gentle idle breathing on a closed card that's waiting to be opened. */
+@keyframes card-breathe { 0%, 100% { transform: translateY(0) rotate(var(--tilt, 0deg)); } 50% { transform: translateY(-4px) rotate(var(--tilt, 0deg)); } }
+.card-breathe { animation: card-breathe 4.5s ease-in-out infinite; }
+
+/* Coin pop: rises, overshoots, fades. */
+@keyframes coin-pop {
+  0% { opacity: 0; transform: translate(-50%, 10px) scale(0.6); }
+  25% { opacity: 1; transform: translate(-50%, -6px) scale(1.12); }
+  45% { transform: translate(-50%, -10px) scale(1); }
+  80% { opacity: 1; transform: translate(-50%, -26px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -40px) scale(0.96); }
+}
+.coin-pop { position: absolute; left: 50%; animation: coin-pop 1700ms var(--ease-paper) both; pointer-events: none; z-index: 30; }
+
+@keyframes coin-bump { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
+.coin-bump { animation: coin-bump 520ms var(--ease-spring); }
+
+/* Sparkles — small ✦ stars that twinkle out, never confetti. */
+@keyframes sparkle {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.2) rotate(0deg); }
+  30% { opacity: 1; transform: translate(calc(var(--dx) * 0.6), calc(var(--dy) * 0.6)) scale(1) rotate(45deg); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.4) rotate(120deg); }
+}
+.sparkle { position: absolute; color: var(--butter); font-size: 14px; animation: sparkle 1300ms ease-out both; pointer-events: none; text-shadow: 0 0 8px rgba(231, 201, 107, 0.7); }
+
+/* Placing the submitted photo onto the card back. */
+@keyframes place-photo {
+  0% { transform: translateY(-120px) rotate(-8deg) scale(1.25); opacity: 0; }
+  55% { opacity: 1; }
+  80% { transform: translateY(4px) rotate(1.5deg) scale(0.98); }
+  100% { transform: translateY(0) rotate(-1.5deg) scale(1); opacity: 1; }
+}
+.place-photo { animation: place-photo 900ms var(--ease-paper) both; }
+
+@keyframes lock-stamp {
+  0% { transform: scale(2.2) rotate(-14deg); opacity: 0; }
+  70% { transform: scale(0.92) rotate(-6deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-8deg); opacity: 1; }
+}
+.lock-stamp { animation: lock-stamp 520ms var(--ease-spring) both; }
+
+/* Template auto-compose: pieces drop into place one by one. */
+@keyframes drop-in {
+  0% { opacity: 0; transform: translate(var(--fx, 0), var(--fy, -60px)) rotate(var(--fr, 0deg)) scale(1.15); }
+  70% { opacity: 1; }
+  100% { opacity: 1; transform: translate(0, 0) rotate(var(--r, 0deg)) scale(1); }
+}
+.drop-in { animation: drop-in 820ms var(--ease-paper) both; }
+
+@keyframes tape-in { 0% { opacity: 0; transform: rotate(var(--r, 0deg)) scaleX(0.2); } 100% { opacity: 0.86; transform: rotate(var(--r, 0deg)) scaleX(1); } }
+.tape-in { animation: tape-in 420ms var(--ease-paper) both; transform-origin: left center; }
+
+@keyframes stamp-in { 0% { opacity: 0; transform: scale(1.6) rotate(var(--r, 0deg)); } 100% { opacity: 1; transform: scale(1) rotate(var(--r, 0deg)); } }
+.stamp-in { animation: stamp-in 420ms var(--ease-spring) both; }
+
+@keyframes page-settle { 0% { transform: scale(0.94) translateY(20px); opacity: 0; } 100% { transform: none; opacity: 1; } }
+.page-settle { animation: page-settle 700ms var(--ease-paper) both; }
+
+/* Sticker drop bounce. */
+@keyframes sticker-drop { 0% { scale: 1.12; } 55% { scale: 0.94; } 80% { scale: 1.03; } 100% { scale: 1; } }
+.sticker-drop { animation: sticker-drop 460ms var(--ease-spring); }
+
+/* Toast ("Added to Our Story ✨", purchases). */
+@keyframes toast { 0% { opacity: 0; transform: translate(-50%, -12px); } 12% { opacity: 1; transform: translate(-50%, 0); } 85% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; transform: translate(-50%, -8px); } }
+.toast { position: absolute; left: 50%; animation: toast 2600ms var(--ease-paper) both; z-index: 95; }
+
+/* Gentle pulse on the "ready to reveal" dot. */
+@keyframes soft-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(201, 130, 125, 0.45); } 50% { box-shadow: 0 0 0 7px rgba(201, 130, 125, 0); } }
+.soft-pulse { animation: soft-pulse 2.4s ease-in-out infinite; }
+
+/* Simulated camera viewfinder slowly drifting over the scene. */
+@keyframes viewfinder-drift { from { transform: scale(1.18) translate(-2%, -1%); } to { transform: scale(1.22) translate(2%, 1.5%); } }
+
+/* Peek-eyes wobble on waiting screen. */
+@keyframes peek { 0%, 70%, 100% { transform: translateX(0); } 78% { transform: translateX(-3px); } 88% { transform: translateX(3px); } }
+.peek { display: inline-block; animation: peek 3.6s ease-in-out infinite; }
+
+/* Reaction tap. */
+@keyframes react-pop { 0% { transform: scale(1); } 40% { transform: scale(1.35) rotate(-8deg); } 100% { transform: scale(1.12); } }
+.react-pop { animation: react-pop 420ms var(--ease-spring) both; }
+
+/* Respect users who prefer less motion: keep states, drop movement. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

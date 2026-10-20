@@ -28,12 +28,12 @@ and the switch itself should come out and the chosen palette should become the o
 1. **Welcome** → Get Started → Continue with email → Create our space → Invite your person → *Simulate join* → **Onboarding** → Open Your First Card.
    (Or use "I already have an account" → Log in to skip straight to TODAY.)
 2. **TODAY** → Start Hunt → tap the shutter (or *Choose from library*) → **Happy with your find?** → Submit. Watch the photo land on the card, the 🔒 stamp, and **+10 🪙**.
-3. **Waiting** → tap *Prototype · simulate Kurt submitting* → Go to the reveal.
+3. **Waiting** → tap *Prototype · simulate Julian submitting* → Go to the reveal.
 4. **Reveal** → OPEN. Both cards flip together → react (❤️ 😍 😂 🥹 👀) → leave a note → **Add to Our Story**.
 5. The page **auto-composes** itself. Try swapping the template, then *See it in Our Story*.
-6. **OUR STORY** → open any page → **Decorate**: drag a sticker, use ↻ to rotate and ⤡ to resize, add stickers, swap templates and frames, and *Preview as Kurt* to see the editing lock → Save.
+6. **OUR STORY** → open any page → **Decorate**: drag a sticker, use ↻ to rotate and ⤡ to resize, add stickers, swap templates and frames, and *Preview as Julian* to see the editing lock → Save.
 7. Tap the coin pill → **Coin Shop**: buy something, then try an item you can't afford.
-8. **TODAY → Missed Hunts**: one Hunt is waiting on Kurt, and the other is "You missed!" → Complete now → Open together.
+8. **TODAY → Missed Hunts**: one Hunt is waiting on Julian, and the other is "You missed!" → Complete now → Open together.
 9. **US**: Hunt mode (1/3/5), Vacation Mode (look at TODAY afterwards), the trial preview, notifications, and End relationship → Archive. Our Story then becomes read-only; use *Restore* to undo.
 
 ## Source layout
@@ -64,4 +64,4 @@ Babel-standalone from fetching separate `.jsx` files. htm gives JSX-like templat
 - No backend, API calls, auth, payments, persistent storage or real notifications. Sign-in, pairing, the partner's actions, subscription and export are all labelled simulations.
 - Hunt mode saves the 1/3/5 preference, but the demo always plays one card pair.
 - Missed Hunts is a self-contained demo and doesn't add pages to Our Story.
-- The editing lock ("Jubi is decorating this page 🎨") is shown as a concept via *Preview as Kurt*.
+- The editing lock ("Olivia is decorating this page 🎨") is shown as a concept via *Preview as Julian*.

@@ -99,7 +99,7 @@
             coins: s.coins + 10,
             today: { ...s.today, myPhoto: photo, status: s.today.partnerSubmitted ? 'ready' : 'submitted' },
           })),
-        // Prototype control: pretend Kurt finished his Hunt.
+        // Prototype control: pretend the partner finished their Hunt.
         simulatePartner: () =>
           update((s) => ({ today: { ...s.today, partnerSubmitted: true, status: s.today.myPhoto ? 'ready' : s.today.status } })),
         markRevealed: () => updateToday({ status: 'revealed' }),

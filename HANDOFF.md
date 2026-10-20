@@ -112,7 +112,7 @@ This applies on every screen. A screen with flat fills and no grain is not done.
 
 **1. Welcome.** Cream, grainy paper background, serif headline: "Turn your separate days into a shared story." Terracotta "Get Started"; text link "I already have an account." Calm, spacious.
 
-**2. TODAY (card closed).** Header "Good morning, Jubi ❤️". Hero: today's Hunt Card, closed, collectible-feeling, showing the user's own prompt in serif ("Find something from your morning.") with a small "Your Hunt" tag and a ✦ motif. Terracotta "Start Hunt." Bottom tabs visible. Default shows 1 card.
+**2. TODAY (card closed).** Header "Good morning, Olivia ❤️". Hero: today's Hunt Card, closed, collectible-feeling, showing the user's own prompt in serif ("Find something from your morning.") with a small "Your Hunt" tag and a ✦ motif. Terracotta "Start Hunt." Bottom tabs visible. Default shows 1 card.
 
 **3. Start Hunt → preview → submit.** Tap Start Hunt → "Go find it 📸" with camera / choose-from-library (simulated — tapping loads a sample photo). Preview: "Happy with your find?" with Submit (terracotta) / Retake. On submit, the photo "places" onto the card back with a satisfying motion; card shows 🔒 locked; a "+10 🪙" pops.
 
@@ -130,11 +130,11 @@ This applies on every screen. A screen with flat fills and no grain is not done.
 
 ## 8. Tier-2 specs (lighter detail)
 
-- **Editor:** the page with draggable stickers (simulate drag + rotate + scale on one or two), a template-swap row, a sticker tray. Show the "Jubi is decorating this page 🎨" lock state as a concept.
+- **Editor:** the page with draggable stickers (simulate drag + rotate + scale on one or two), a template-swap row, a sticker tray. Show the "Olivia is decorating this page 🎨" lock state as a concept.
 - **Coin Shop:** sections TEMPLATES / STICKERS / FRAMES / THEMES with butter-yellow coin prices, balance "620 🪙" top-right, some items locked/premium, a free starter set. Classic template Free; Love Letter 150; Sunday Morning 200; etc.
-- **Missed Hunts:** gentle, dedicated page, per-partner framing — if *you* missed → "You missed!" + "Complete now"; if *they* missed → "Waiting for Kurt to complete this Hunt." Warm, no guilt.
+- **Missed Hunts:** gentle, dedicated page, per-partner framing — if *you* missed → "You missed!" + "Complete now"; if *they* missed → "Waiting for Julian to complete this Hunt." Warm, no guilt.
 - **Onboarding:** "You're officially hunting together." brief explainer of daily card + reveal, terracotta "Open Your First Card."
-- **US / settings:** couple profile ("Kurt + Jubi"), subscription status, notifications, Hunt mode, Vacation Mode, relationship controls. Calm and simple.
+- **US / settings:** couple profile ("Julian + Olivia"), subscription status, notifications, Hunt mode, Vacation Mode, relationship controls. Calm and simple.
 - **Hunt mode picker:** 1 (Easy) / 3 (Regular) / 5 (Challenge), default 1.
 - **Vacation Mode:** gentle toggle, "Pause new Hunts while you're away."
 - **Trial conversion:** "Your first 14 days ❤️ — 14 days together · 26 moments created · 52 photos shared · 620 Coins earned." Then "Keep building your story." terracotta "Continue Together." Show accumulated value, never a harsh paywall.
@@ -145,10 +145,10 @@ Sign up/login; create couple/invite (show an invite code + "Invite your person �
 
 ## 10. Mock data to hardcode (one shared file)
 
-- Couple **Kurt + Jubi**; current user = Jubi. Coins **620**. Streak **🔥 12** (decorative only — no pressure messaging anywhere).
-- Today's pair: Jubi "Find something from your morning." / Kurt "Find something from your evening."
+- Couple **Julian + Olivia**; current user = Olivia. Coins **620**. Streak **🔥 12** (decorative only — no pressure messaging anywhere).
+- Today's pair: Olivia "Find something from your morning." / Julian "Find something from your evening."
 - A few past memories for Our Story (Sept 18, 17, 15…), each with two finds and varied templates (Classic, Love Letter, Sunday Morning).
-- One Missed Hunt example (Kurt hasn't submitted) to show the framing.
+- One Missed Hunt example (Julian hasn't submitted) to show the framing.
 - Shop items with prices as in §8.
 - **Images:** warm lifestyle placeholder photos (coffee, a window, a sunset, a plant, food). If reliable external images aren't available, use warm gradient/paper placeholders with the polaroid treatment — the *framing* matters more than the image content.
 
@@ -201,7 +201,7 @@ Current authorization: implement continuously without approval pauses (confirmed
 Verified in Google Chrome (headless, via puppeteer-core run from a scratch folder outside the project) by opening `index.html` directly over `file://`:
 
 - **Tier-1 flow:** Welcome → sign up → create couple → invite → simulated join → onboarding → TODAY → Start Hunt → shutter → preview → Submit (photo lands on the card, 🔒 stamp, +10 🪙, balance 620 → 630) → Waiting → simulated partner → Reveal → OPEN (both cards flip together) → reaction + comment → Add to Our Story (auto-compose, template swap) → new page in Our Story (stats 84 moments · 216 photos) → page detail → Back → feed. No console errors or warnings.
-- **Tier-2/3 flow:** login shortcut → page detail → editor (sticker dragged, rotated and resized with pointer events, sticker added, template and frame swapped, "Preview as Kurt" lock view) → Save persists in memory → Coin Shop (confirm and buy, balance deducted, owned state shown, a theme bundle unlocks its items, insufficient-balance message) → Missed Hunts (complete via library → ready → open together) → Hunt mode → Vacation Mode (TODAY shows the paused state) → trial preview → notifications → End relationship → Archive (Our Story read-only, TODAY paused, Decorate hidden). No console errors.
+- **Tier-2/3 flow:** login shortcut → page detail → editor (sticker dragged, rotated and resized with pointer events, sticker added, template and frame swapped, "Preview as Julian" lock view) → Save persists in memory → Coin Shop (confirm and buy, balance deducted, owned state shown, a theme bundle unlocks its items, insufficient-balance message) → Missed Hunts (complete via library → ready → open together) → Hunt mode → Vacation Mode (TODAY shows the paused state) → trial preview → notifications → End relationship → Archive (Our Story read-only, TODAY paused, Decorate hidden). No console errors.
 - **Responsive:** 320×640 and 390×844 render full-bleed with the tab bar pinned 12px from the bottom. At 1400×900 the phone frame is 400px wide and centred. A mid-transition screenshot confirmed the push slide.
 - **Not verified:** real touch devices, Safari/Firefox, `prefers-reduced-motion`.
 - **Prototype limits:** see README.md. No backend, API calls, auth, payments, persistent storage or deployment. Hunt mode stores the preference but always plays one pair. Missed Hunts is a self-contained demo.

@@ -3,7 +3,7 @@
 
   Tier 2 · Screen 12 — Missed Hunts.
   A gentle, dedicated page. The same Hunt is framed differently per partner:
-    - I submitted, they didn't → "Waiting for Kurt to complete this Hunt."
+    - I submitted, they didn't → "Waiting for [partner] to complete this Hunt."
     - They submitted, I didn't → "You missed!" + "Complete now"
   No deadlines, no guilt. Completing one reuses the normal capture flow
   (hunt.js with params.missedId); once both cards are in, it can be opened

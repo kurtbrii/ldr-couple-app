@@ -70,7 +70,7 @@
   */
   function LoginScreen() {
     const nav = LDR.useNav();
-    const [email, setEmail] = useState('jubi@example.com');
+    const [email, setEmail] = useState('olivia@example.com');
     const [pw, setPw] = useState('••••••••');
     return html`<${Screen}
       header=${html`<${TopBar} onBack=${nav.pop} />`}
@@ -90,12 +90,12 @@
 
   /*
     CreateCoupleScreen — Tier 3 stub: your name, partner's name, optional
-    nickname. Shows a live "Kurt + Jubi" preview to make it feel personal.
+    nickname. Shows a live "Julian + Olivia" preview to make it feel personal.
   */
   function CreateCoupleScreen() {
     const nav = LDR.useNav();
-    const [me, setMe] = useState('Jubi');
-    const [them, setThem] = useState('Kurt');
+    const [me, setMe] = useState('Olivia');
+    const [them, setThem] = useState('Julian');
     const [nick, setNick] = useState('');
     return html`<${Screen}
       header=${html`<${TopBar} onBack=${nav.pop} />`}
@@ -121,13 +121,13 @@
   /*
     InviteScreen — Tier 3 stub: shows the private invite code and the
     "Invite your person ❤️" action. A clearly-labelled control simulates
-    Kurt accepting, which unlocks onboarding.
+    the partner accepting, which unlocks onboarding.
   */
   function InviteScreen() {
     const nav = LDR.useNav();
-    const { actions } = LDR.useStore();
+    const { state, actions } = LDR.useStore();
     const [sent, setSent] = useState(false);
-    const code = 'JUBI · K7Q2';
+    const code = `${state.user.name.toUpperCase()} · J7Q2`;
     return html`<${Screen} header=${html`<${TopBar} onBack=${nav.pop} />`}>
       <div className="px-7 pt-2 pb-10">
         <h1 className="font-serif text-[30px] leading-tight tracking-[-0.02em] fade-up">Now, bring them in</h1>
@@ -143,13 +143,13 @@
         </div>
 
         <div className="mt-6 space-y-3 fade-up" style=${{ animationDelay: '180ms' }}>
-          <${PrimaryButton} onClick=${() => { setSent(true); actions.toast('Invite sent to Kurt ❤️'); }}>
+          <${PrimaryButton} onClick=${() => { setSent(true); actions.toast(`Invite sent to ${state.partner.name} ❤️`); }}>
             Invite your person <span className="text-rose-100" aria-hidden="true">❤️</span>
           <//>
           ${sent
             ? html`<div className="surface grain px-4 py-3.5 flex items-center gap-3 fade-up">
                 <span className="w-2 h-2 rounded-full bg-sage soft-pulse" />
-                <span className="flex-1 text-[14px] text-muted">Waiting for Kurt to join…</span>
+                <span className="flex-1 text-[14px] text-muted">Waiting for ${state.partner.name} to join…</span>
                 <button onClick=${() => nav.push('onboarding', {}, 'fade')} className="text-[13.5px] font-semibold text-ink underline underline-offset-4 decoration-[rgba(61,53,48,0.3)]">Simulate join</button>
               </div>`
             : null}
@@ -166,6 +166,7 @@
   */
   function OnboardingScreen() {
     const nav = LDR.useNav();
+    const { state } = LDR.useStore();
     return html`<${Screen}
       footer=${html`<div className="px-7 pb-9 pt-3 fade-up" style=${{ animationDelay: '700ms' }}>
         <${PrimaryButton} onClick=${() => nav.setFlow('main')}>Open Your First Card<//>
@@ -174,9 +175,9 @@
       <div className="safe-top" />
       <div className="px-7 pt-6 text-center">
         <div className="flex justify-center items-center gap-2 fade-up">
-          <${Avatar} name="Jubi" tone="sage" size=${40} />
+          <${Avatar} name=${state.user.name} tone="sage" size=${40} />
           <span className="text-rose text-[18px]" aria-hidden="true">❤️</span>
-          <${Avatar} name="Kurt" tone="rose" size=${40} />
+          <${Avatar} name=${state.partner.name} tone="rose" size=${40} />
         </div>
         <h1 className="font-serif text-[31px] leading-[1.15] tracking-[-0.02em] mt-6 fade-up" style=${{ animationDelay: '120ms' }}>
           You’re officially <em className="italic font-light">hunting together.</em>

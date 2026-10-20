@@ -71,8 +71,8 @@
     Returns: the object App() stores in React state. Shape notes inline.
   */
   LDR.createInitialState = () => ({
-    user: { name: 'Jubi', email: 'jubi@example.com' },
-    partner: { name: 'Kurt' },
+    user: { name: 'Olivia', email: 'olivia@example.com' },
+    partner: { name: 'Julian' },
     coupleSince: 'March 2024',
 
     coins: 620,          // shared couple wallet
@@ -92,7 +92,7 @@
       Today's Hunt for this couple.
       status: 'open' → 'submitted' (my card locked, waiting) → 'ready' (both in)
               → 'revealed' → 'added' (saved to Our Story).
-      theirPhoto is pre-chosen: it's what Kurt "will" submit when simulated.
+      theirPhoto is pre-chosen: it's what the partner "will" submit when simulated.
     */
     today: {
       date: 'September 19',
@@ -105,8 +105,8 @@
       myPhoto: null,
       theirPhoto: 'sunset',
       partnerSubmitted: false,
-      myReaction: null,          // my reaction on Kurt's photo
-      theirReaction: '🥹',       // Kurt's (simulated) reaction on my photo
+      myReaction: null,          // my reaction on the partner's photo
+      theirReaction: '🥹',       // the partner's (simulated) reaction on my photo
       comment: '',               // my optional short comment
       memoryId: null,            // set once added to Our Story
     },
@@ -126,7 +126,7 @@
         mine: { prompt: 'Find something that made you smile today.', photo: 'flowers' },
         theirs: { prompt: 'Find something you wish I could have seen.', photo: 'beach' },
         reactions: { onMine: '❤️', onTheirs: '😍' },
-        comments: [{ by: 'Kurt', text: 'these are going on our table one day' }],
+        comments: [{ by: 'Julian', text: 'these are going on our table one day' }],
         caption: 'quiet little thursday',
         stickers: [
           { uid: 's1', id: 'daisy', x: 76, y: 12, r: 14, s: 1 },
@@ -142,7 +142,7 @@
         mine: { prompt: 'Find something you ate today.', photo: 'pasta' },
         theirs: { prompt: 'Find something you wish you could have shared with me.', photo: 'bread' },
         reactions: { onMine: '🥹', onTheirs: '😂' },
-        comments: [{ by: 'Jubi', text: "I knew you'd take a picture of that 😂" }],
+        comments: [{ by: 'Olivia', text: "I knew you'd take a picture of that 😂" }],
         caption: 'dinner, 6,000 miles apart',
         stickers: [
           { uid: 's3', id: 'envelope', x: 70, y: 66, r: 8, s: 0.95 },
@@ -174,7 +174,7 @@
         mine: { prompt: 'Find something beautiful.', photo: 'plant' },
         theirs: { prompt: 'Find something ordinary that you enjoyed.', photo: 'book' },
         reactions: { onMine: '😍', onTheirs: '🥹' },
-        comments: [{ by: 'Kurt', text: 'you and that plant 🌿' }],
+        comments: [{ by: 'Julian', text: 'you and that plant 🌿' }],
         caption: '',
         stickers: [{ uid: 's7', id: 'sprig', x: 74, y: 70, r: 10, s: 1 }],
       },
@@ -195,8 +195,8 @@
 
     /*
       Missed Hunts. `whoMissed` drives the per-partner framing:
-        'them' → "Waiting for Kurt to complete this Hunt." (my photo is in)
-        'me'   → "You missed!" + Complete now (Kurt's photo is in, hidden)
+        'them' → "Waiting for [partner] to complete this Hunt." (my photo is in)
+        'me'   → "You missed!" + Complete now (the partner's photo is in, hidden)
     */
     missed: [
       {

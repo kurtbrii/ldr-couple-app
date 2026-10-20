@@ -267,7 +267,7 @@
     <//>`;
   }
 
-  // Initial in a soft circle — partners are tinted sage (Jubi) and rose (Kurt).
+  // Initial in a soft circle — partners are tinted sage (the user) and rose (their partner).
   function Avatar({ name, tone = 'sage', size = 36 }) {
     const bg = tone === 'rose' ? '#E9CFCB' : '#DCE1D3';
     const fg = tone === 'rose' ? '#8E514C' : '#5F6C57';
@@ -554,10 +554,13 @@
       compose:  play the auto-compose animation (photos drop in, tape, stamp).
       showStickers: render saved stickers (the editor renders its own).
       showMeta: prompts + reactions under the photos (off for tiny thumbnails).
-      names:    { mine, theirs } for captions.
+      names:    { mine, theirs } for captions — defaults to the couple's real
+                names from the store, so every caller stays correct for free.
       children: extra absolutely-positioned layers (editor stickers).
   */
-  function ScrapbookPage({ memory, template, compose = false, showStickers = true, showMeta = true, names = { mine: 'Jubi', theirs: 'Kurt' }, className = '', style, children, frame }) {
+  function ScrapbookPage({ memory, template, compose = false, showStickers = true, showMeta = true, names, className = '', style, children, frame }) {
+    const { state } = LDR.useStore();
+    const resolvedNames = names || { mine: state.user.name, theirs: state.partner.name };
     const tpl = LDR.TEMPLATES[template || memory.template] || LDR.TEMPLATES.classic;
     const frameId = frame || memory.frame || 'polaroid';
     const textColor = tpl.dark ? '#E9E3D6' : 'var(--ink)';
@@ -602,7 +605,7 @@
         >
           <${Polaroid}
             photo=${p.data.photo}
-            caption=${p.side === 'mine' ? names.mine : names.theirs}
+            caption=${p.side === 'mine' ? resolvedNames.mine : resolvedNames.theirs}
             frame=${frameId}
             scaleText
           />
@@ -632,7 +635,7 @@
               ? html`<div className="font-hand leading-none mb-[2cqw]" style=${{ fontSize: '6.4cqw', color: tpl.accent, transform: 'rotate(-1.5deg)' }}>${memory.caption}</div>`
               : null}
             <div className="space-y-[1.2cqw]">
-              ${[['mine', names.mine], ['theirs', names.theirs]].map(
+              ${[['mine', resolvedNames.mine], ['theirs', resolvedNames.theirs]].map(
                 ([side, who]) => html`<div key=${side} className="flex gap-[2cqw] items-baseline">
                   <span className="uppercase font-semibold shrink-0" style=${{ fontSize: '2.5cqw', letterSpacing: '0.16em', color: subColor, width: '9cqw' }}>${who}</span>
                   <span className="font-serif italic leading-snug" style=${{ fontSize: '3.5cqw', color: textColor }}>“${memory[side].prompt}”</span>

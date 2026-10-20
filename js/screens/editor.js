@@ -7,8 +7,8 @@
     - rotate with the ↻ handle, scale with the ⤡ handle, remove with ×
     - a slight bounce when a sticker is dropped
     - tray tabs: Stickers · Templates · Frames (owned items; locked ones link to the shop)
-    - the single-editor lock concept: "Jubi is decorating this page 🎨",
-      previewable from Kurt's side with a toggle
+    - the single-editor lock concept: "[name] is decorating this page 🎨",
+      previewable from the partner's side with a toggle
 
   Edits live in a local draft until Save; Cancel throws them away.
   Used by: navigation registry ('editor'), opened as a sheet from a memory page.
@@ -223,7 +223,7 @@
     }));
     const [selected, setSelected] = useState(null);
     const [tab, setTab] = useState('stickers');
-    const [asPartner, setAsPartner] = useState(false); // preview the lock from Kurt's side
+    const [asPartner, setAsPartner] = useState(false); // preview the lock from the partner's side
     const pageRef = useRef(null);
 
     // Take the single-editor lock while this screen is open.

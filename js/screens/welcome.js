@@ -32,12 +32,12 @@
       <div className="flex-1 flex items-center justify-center min-h-[330px]">
         <div className="relative w-[300px] h-[310px] shrink-0">
           <div className="absolute left-[14px] top-[22px] w-[150px] h-[210px] fade-up" style=${{ animationDelay: '80ms' }}>
-            <div className="w-full h-full rounded-[16px] overflow-hidden card-breathe" style=${{ '--tilt': '-8deg', boxShadow: 'var(--shadow-card)' }}>
+            <div className="w-full h-full rounded-[16px] overflow-hidden card-shape card-breathe" style=${{ '--tilt': '-8deg', boxShadow: 'var(--shadow-card)' }}>
               <${HuntCardFront} prompt="Find something from your morning." tint="morningButter" tag="Your Hunt" />
             </div>
           </div>
           <div className="absolute right-[14px] top-[6px] w-[150px] h-[210px] fade-up" style=${{ animationDelay: '200ms' }}>
-            <div className="w-full h-full rounded-[16px] overflow-hidden card-breathe" style=${{ '--tilt': '7deg', boxShadow: 'var(--shadow-card)', animationDelay: '-2.2s' }}>
+            <div className="w-full h-full rounded-[16px] overflow-hidden card-shape card-breathe" style=${{ '--tilt': '7deg', boxShadow: 'var(--shadow-card)', animationDelay: '-2.2s' }}>
               <${HuntCardFront} prompt="Find something from your evening." tint="eveningLavender" tag="Their Hunt" />
             </div>
           </div>

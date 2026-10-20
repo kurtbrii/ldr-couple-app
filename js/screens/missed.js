@@ -16,13 +16,14 @@
   const LDR = window.LDR;
   const html = LDR.html;
   const { useState } = React;
-  const { Screen, TopBar, PrimaryButton, HuntCardFront, HuntCardBack, FlipCard, Sparkles, Polaroid } = LDR;
+  const { Screen, TopBar, PrimaryButton, HuntCardFront, HuntCardBack, FlipCard, Sparkles, Polaroid, cx } = LDR;
 
   /*
     MissedCard — one missed Hunt: date, the two little cards, framed copy and
     the single action that applies to me (if any).
   */
   function MissedCard({ m, partner, onComplete, onReveal, justCompleted }) {
+    const { vintage } = LDR.useStyle();
     const [flipped, setFlipped] = useState(m.status === 'revealed');
     const open = () => {
       setFlipped(true);
@@ -40,8 +41,8 @@
       theirs = html`<${FlipCard} className="w-full aspect-[5/7]" radius=${14} flipped=${flipped} lift front=${html`<${HuntCardFront} prompt=${m.theirPrompt} tint=${m.theirTint} tag=${partner + '’s card'} />`} back=${html`<${HuntCardBack} tint=${m.theirTint} photo=${m.theirPhoto || 'sunset'} label=${partner} />`} />`;
     } else {
       // One side in: the submitted side shows locked, the other its prompt.
-      const lockedBack = (tint, photo, label) => html`<div className="w-full aspect-[5/7] rounded-[14px] overflow-hidden" style=${{ boxShadow: 'var(--shadow-card)' }}><${HuntCardBack} tint=${tint} photo=${photo} locked label=${label} /></div>`;
-      const front = (node) => html`<div className="w-full aspect-[5/7] rounded-[14px] overflow-hidden" style=${{ boxShadow: 'var(--shadow-card)' }}>${node}</div>`;
+      const lockedBack = (tint, photo, label) => html`<div className="w-full aspect-[5/7] rounded-[14px] overflow-hidden card-shape" style=${{ boxShadow: 'var(--shadow-card)' }}><${HuntCardBack} tint=${tint} photo=${photo} locked label=${label} /></div>`;
+      const front = (node) => html`<div className="w-full aspect-[5/7] rounded-[14px] overflow-hidden card-shape" style=${{ boxShadow: 'var(--shadow-card)' }}>${node}</div>`;
       mine = m.myPhoto ? lockedBack(m.myTint, m.myPhoto, 'mine') : front(mineFront);
       // Their submitted photo stays hidden from me: show their card back with no photo.
       theirs = m.theirPhoto ? lockedBack(m.theirTint, null) : front(theirsFront);
@@ -71,7 +72,7 @@
     return html`<div className=${'surface grain px-5 pt-4 pb-5 fade-up ' + (justCompleted ? 'page-settle' : '')}>
       <div className="flex items-baseline justify-between">
         <div className="font-serif text-[19px]">${m.date}</div>
-        <div className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted">${m.status === 'revealed' ? 'Opened' : m.status === 'ready' ? 'Ready' : m.whoMissed === 'me' ? 'Your turn' : partner + '’s turn'}</div>
+        <div className=${cx('text-[11px] font-semibold tracking-[0.14em] uppercase text-muted', vintage && 'label-type')}>${m.status === 'revealed' ? 'Opened' : m.status === 'ready' ? 'Ready' : m.whoMissed === 'me' ? 'Your turn' : partner + '’s turn'}</div>
       </div>
       <div className="relative flex gap-4 mt-4 px-3">
         <div className="w-1/2" style=${{ transform: 'rotate(-2.5deg)' }}>${mine}</div>

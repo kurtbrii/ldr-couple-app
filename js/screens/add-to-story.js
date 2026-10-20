@@ -32,7 +32,7 @@
             onClick=${() => onPick(id)}
             aria-pressed=${on}
             className="flex items-center gap-2 h-10 pl-1.5 pr-3.5 rounded-full text-[13.5px] transition-all"
-            style=${{ background: on ? '#FFF9F0' : 'rgba(255,249,240,0.5)', boxShadow: on ? 'inset 0 0 0 1.5px #3D3530' : 'inset 0 0 0 1px rgba(136,121,112,0.25)' }}
+            style=${{ background: on ? 'var(--ivory)' : 'rgba(255,249,240,0.5)', boxShadow: on ? 'inset 0 0 0 1.5px var(--ink)' : 'inset 0 0 0 1px rgba(136,121,112,0.25)' }}
           >
             <span className="w-7 h-7 rounded-full cardstock grain" style=${{ background: tpl.paper, boxShadow: `inset 0 0 0 3px ${tpl.tapes[0]}` }} />
             ${tpl.name}

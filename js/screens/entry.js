@@ -189,7 +189,7 @@
             n: '01',
             title: 'Every day, you each get a Hunt Card.',
             body: 'Your cards are connected — but you won’t see each other’s until it’s time to reveal.',
-            art: html`<div className="w-[58px] h-[80px] rounded-[9px] overflow-hidden shrink-0" style=${{ transform: 'rotate(-5deg)', boxShadow: 'var(--shadow-soft)' }}>
+            art: html`<div className="w-[58px] h-[80px] rounded-[9px] overflow-hidden card-shape shrink-0" style=${{ transform: 'rotate(-5deg)', boxShadow: 'var(--shadow-soft)' }}>
               <${HuntCardFront} prompt="Find something from your morning." tint="morningSage" tag="Yours" />
             </div>`,
           },

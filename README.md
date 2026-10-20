@@ -12,6 +12,17 @@ Every photo is generated locally as SVG.
 
 All state lives in React memory, so **refreshing resets the demo**. There's also a *Reset prototype* link at the bottom of the US tab.
 
+## Comparing Modern vs. Vintage (temporary)
+
+This branch adds a **Modern / Vintage** switch, pinned top-right on desktop widths (it hides
+on real phone widths, where there's no room for it and no second style to compare against).
+It recolours and re-textures the whole app live — card tints, paper texture, corner
+radius, button shape, coin styling and the small structural labels (card tags, section
+headings, tab names) swap to a typewriter face — without touching any screen's logic.
+
+This is for side-by-side comparison only. Once one direction is picked, the losing style
+and the switch itself should come out and the chosen palette should become the only one.
+
 ## A good route through it
 
 1. **Welcome** → Get Started → Continue with email → Create our space → Invite your person → *Simulate join* → **Onboarding** → Open Your First Card.

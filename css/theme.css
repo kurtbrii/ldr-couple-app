@@ -3,10 +3,13 @@
 
   Global look & feel for the prototype:
     1. Design tokens (CSS custom properties) — the locked palette from HANDOFF §2.
+       Section 6 overrides them for the alternative "Vintage" style
+       (switched on with data-theme="vintage" on the .phone element).
     2. The desk backdrop + phone frame (≈400px on desktop, full-bleed on phones).
     3. Paper grain & texture (HANDOFF §3 — a hard requirement on every surface).
     4. Shared surface helpers: paper cards, polaroids, washi tape, buttons.
     5. Motion: stack transitions, 3D card flip, coin pop, sparkle, compose, stickers.
+    6. Vintage style: aged parchment, sepia ink, specks & foxing, tighter corners.
 
   Used by: index.html (loaded once, before any script).
 */
@@ -21,6 +24,21 @@
   --butter: #E7C96B;     /* Butter Yellow — coins only */
   --ink: #3D3530;        /* Ink Brown — primary text */
   --muted: #887970;      /* Muted Brown — secondary text */
+
+  /* Same palette as space-separated RGB, for Tailwind's opacity modifiers. */
+  --cream-rgb: 247 241 230;
+  --ivory-rgb: 255 249 240;
+  --rose-rgb: 201 130 125;
+  --terracotta-rgb: 185 104 79;
+  --sage-rgb: 141 155 131;
+  --butter-rgb: 231 201 107;
+  --ink-rgb: 61 53 48;
+  --muted-rgb: 136 121 112;
+
+  --print-border: #FFFDF8;                                         /* polaroid border */
+  --photo-filter: saturate(0.88) contrast(0.98) sepia(0.08);        /* how photos are "printed" */
+  --r-surface: 18px;                                                /* ivory card corners */
+  --r-button: 16px;                                                 /* button corners */
 
   /* Warm, brown-tinted shadows — never neutral gray. */
   --shadow-soft: 0 1px 2px rgba(61, 53, 48, 0.06), 0 6px 18px -6px rgba(92, 64, 44, 0.18);
@@ -173,7 +191,7 @@ input, textarea { font: inherit; color: inherit; }
   background-image: var(--mottle-soft);
   background-size: cover;
   background-repeat: no-repeat;
-  border-radius: 18px;
+  border-radius: var(--r-surface);
   box-shadow: var(--shadow-soft);
   border: 1px solid rgba(136, 121, 112, 0.12);
 }
@@ -191,7 +209,7 @@ input, textarea { font: inherit; color: inherit; }
 
 /* Polaroid print: white-warm border, thicker bottom lip, warm shadow. */
 .print {
-  background: #FFFDF8;
+  background: var(--print-border);
   padding: 7px 7px 26px;
   box-shadow: var(--shadow-print);
   border-radius: 2px;
@@ -203,7 +221,7 @@ input, textarea { font: inherit; color: inherit; }
   aspect-ratio: 4 / 5;
   object-fit: cover;
   background: #EADFCF;
-  filter: saturate(0.88) contrast(0.98) sepia(0.08);
+  filter: var(--photo-filter);
 }
 /* A faint inner shadow so the photo looks printed into the paper. */
 .print-photo { position: relative; overflow: hidden; }
@@ -248,7 +266,7 @@ input, textarea { font: inherit; color: inherit; }
   color: #FFF9F0;
   font-weight: 600;
   letter-spacing: 0.01em;
-  border-radius: 16px;
+  border-radius: var(--r-button);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 8px 18px -8px rgba(185, 104, 79, 0.7);
   transition: transform 180ms var(--ease-paper), box-shadow 180ms, filter 180ms;
 }
@@ -261,7 +279,7 @@ input, textarea { font: inherit; color: inherit; }
   border: 1px solid rgba(136, 121, 112, 0.28);
   color: var(--ink);
   font-weight: 500;
-  border-radius: 16px;
+  border-radius: var(--r-button);
   transition: transform 180ms var(--ease-paper), background 180ms;
 }
 .btn-secondary:active { transform: scale(0.985); background: var(--ivory); }
@@ -445,3 +463,122 @@ input, textarea { font: inherit; color: inherit; }
     transition-duration: 1ms !important;
   }
 }
+
+/* ------------------------------------------------------ 6. Vintage style */
+/*
+  An alternative, more vintage take on the same app, for side-by-side comparison
+  (toggle: "Style · Modern / Vintage"). Paper looks aged rather than new:
+    - deeper parchment, sepia ink, slightly aged accent colours
+    - fine ink specks + rust "foxing" spots instead of streaky fibres
+    - burnt, darker edges on pages, cards and the background
+    - tighter corners, typewriter labels, yellowed photo borders, faded prints
+  Card tints and the postmark motif live in js/theme.js / components.js.
+*/
+.phone[data-theme='vintage'] {
+  --cream: #EADCC0;  --cream-rgb: 234 220 192;     /* aged parchment */
+  --ivory: #F4E9D2;  --ivory-rgb: 244 233 210;     /* old letter paper */
+  --rose: #B4736A;   --rose-rgb: 180 115 106;      /* faded rose */
+  --terracotta: #A5563C; --terracotta-rgb: 165 86 60; /* oxide red, still strong for actions */
+  --sage: #7C8669;   --sage-rgb: 124 134 105;      /* olive sage */
+  --butter: #D8B75E; --butter-rgb: 216 183 94;     /* old gold */
+  --ink: #4A3426;    --ink-rgb: 74 52 38;          /* sepia ink */
+  --muted: #86705C;  --muted-rgb: 134 112 92;      /* faded sepia */
+
+  --print-border: #F1E5CA;
+  --photo-filter: sepia(0.34) saturate(0.7) contrast(0.92) brightness(1.03);
+  --r-surface: 6px;
+  --r-button: 8px;
+
+  --shadow-soft: 0 1px 2px rgba(74, 52, 38, 0.10), 0 6px 16px -6px rgba(100, 62, 30, 0.26);
+  --shadow-card: 0 2px 3px rgba(74, 52, 38, 0.12), 0 14px 28px -12px rgba(100, 62, 30, 0.42);
+  --shadow-print: 0 1px 1px rgba(74, 52, 38, 0.14), 0 8px 18px -8px rgba(100, 62, 30, 0.45);
+
+  /* Fine dark ink specks (sparse dots from thresholded noise). */
+  --specks: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='s'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='1' seed='11' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.25 0 0 0 0 0.16 0 0 0 0 0.1 0 0 0 14 -11.4'/></filter><rect width='100%' height='100%' filter='url(%23s)'/></svg>");
+  /* Rust-coloured foxing spots, the age marks on old paper. */
+  --foxing: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='700'><filter id='x'><feTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='3' seed='23' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.38 0 0 0 0 0.18 0 0 0 5 -3.55'/></filter><rect width='100%' height='100%' filter='url(%23x)'/></svg>");
+  /* Burnt edge: darker toward the edges, like paper that sat in the sun. */
+  --burn: radial-gradient(125% 105% at 50% 45%, transparent 55%, rgba(122, 78, 36, 0.26) 100%);
+
+  background: var(--cream);
+}
+
+.phone[data-theme='vintage'] .paper-bg {
+  background-color: var(--cream);
+  background-image: var(--burn), var(--specks), var(--foxing), var(--mottle);
+  background-size: auto, 240px 240px, cover, cover;
+  background-repeat: no-repeat, repeat, no-repeat, no-repeat;
+}
+
+.phone[data-theme='vintage'] .surface {
+  background-image: var(--specks), var(--mottle-soft);
+  background-size: 240px 240px, cover;
+  background-repeat: repeat, no-repeat;
+  border-color: rgba(120, 90, 60, 0.22);
+  box-shadow: inset 0 0 16px rgba(140, 98, 52, 0.14), var(--shadow-soft);
+}
+
+/* Cardstock: no streaky fibres — specks, foxing and a burnt edge instead. */
+.phone[data-theme='vintage'] .cardstock {
+  background-image: var(--burn), var(--specks), var(--foxing), var(--mottle);
+  background-size: auto, 240px 240px, cover, cover;
+  background-repeat: no-repeat, repeat, no-repeat, no-repeat;
+}
+
+/* Hunt Cards: tight, printed-card corners. Beats the inline radius on purpose. */
+.phone[data-theme='vintage'] .card-shape,
+.phone[data-theme='vintage'] .flip-card,
+.phone[data-theme='vintage'] .flip-face { border-radius: 7px !important; }
+
+/* Scrapbook pages yellow with age; the tint sits under the photos. */
+.phone[data-theme='vintage'] .page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--burn), linear-gradient(rgba(206, 168, 106, 0.2), rgba(206, 168, 106, 0.2));
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Polaroids: yellowed borders, darker toward the edges. */
+.phone[data-theme='vintage'] .print {
+  background: radial-gradient(130% 120% at 50% 45%, var(--print-border) 60%, #DCC79F 100%);
+}
+
+/* Tape turns into old masking tape. */
+.phone[data-theme='vintage'] .washi { filter: sepia(0.5) saturate(0.7) brightness(0.97); }
+
+/* Typewriter labels: card tags, section headings, tab names. */
+.phone[data-theme='vintage'] .label-type {
+  font-family: 'Courier Prime', ui-monospace, monospace !important;
+  font-weight: 700;
+  letter-spacing: 0.08em !important;
+}
+
+/* Card tag becomes a printed rule label instead of a pill. */
+.phone[data-theme='vintage'] .card-tag {
+  border-radius: 1px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-top: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  padding-left: 1cqw !important;
+  padding-right: 1cqw !important;
+}
+
+/* Coins look like old brass tokens. */
+.phone[data-theme='vintage'] .coin-pill {
+  background: linear-gradient(180deg, #E3C979, var(--butter));
+  color: #4F3B12;
+  border-radius: 6px;
+}
+
+/* ----------------------------------------- Prototype style switch (outside the phone) */
+.style-switch {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 200;
+}
+@media (max-width: 480px) { .style-switch { display: none; } }
+

@@ -28,11 +28,11 @@
 
     return html`<${Screen} header=${html`<${TopBar} onBack=${nav.pop} />`} bodyClass="flex flex-col">
       <div className="relative mx-auto mt-4 h-[290px] shrink-0" style=${{ width: 'min(330px, 88%)' }}>
-        <div className="absolute left-0 top-6 w-[54%] aspect-[5/7] rounded-[18px] overflow-hidden fade-up" style=${{ transform: 'rotate(-6deg)', boxShadow: 'var(--shadow-card)' }}>
+        <div className="absolute left-0 top-6 w-[54%] aspect-[5/7] rounded-[18px] overflow-hidden card-shape fade-up" style=${{ transform: 'rotate(-6deg)', boxShadow: 'var(--shadow-card)' }}>
           <${HuntCardBack} tint=${t.myTint} photo=${t.myPhoto} locked label="my find" />
         </div>
         <div
-          className=${'absolute right-0 top-0 w-[54%] aspect-[5/7] rounded-[18px] overflow-hidden fade-up transition-all duration-700 ' + (ready ? '' : 'opacity-[0.88]')}
+          className=${'absolute right-0 top-0 w-[54%] aspect-[5/7] rounded-[18px] overflow-hidden card-shape fade-up transition-all duration-700 ' + (ready ? '' : 'opacity-[0.88]')}
           style=${{ transform: ready ? 'rotate(5deg)' : 'rotate(7deg) translateY(10px)', boxShadow: 'var(--shadow-card)', animationDelay: '120ms' }}
         >
           ${ready

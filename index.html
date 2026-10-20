@@ -23,30 +23,33 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Courier+Prime:wght@400;700&family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@400;500;600&display=swap"
     rel="stylesheet"
   />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    // Tailwind theme mirrors the locked palette in js/theme.js (HANDOFF §2).
+    // Tailwind theme mirrors the palette in js/theme.js (HANDOFF §2).
     tailwind.config = {
       theme: {
         extend: {
+          // Colours come from CSS variables (css/theme.css) so the Modern / Vintage
+          // style switch can recolour every utility class at once.
           colors: {
-            cream: '#F7F1E6',
-            ivory: '#FFF9F0',
-            rose: '#C9827D',
-            terracotta: '#B9684F',
-            sage: '#8D9B83',
-            butter: '#E7C96B',
-            ink: '#3D3530',
-            muted: '#887970',
+            cream: 'rgb(var(--cream-rgb) / <alpha-value>)',
+            ivory: 'rgb(var(--ivory-rgb) / <alpha-value>)',
+            rose: 'rgb(var(--rose-rgb) / <alpha-value>)',
+            terracotta: 'rgb(var(--terracotta-rgb) / <alpha-value>)',
+            sage: 'rgb(var(--sage-rgb) / <alpha-value>)',
+            butter: 'rgb(var(--butter-rgb) / <alpha-value>)',
+            ink: 'rgb(var(--ink-rgb) / <alpha-value>)',
+            muted: 'rgb(var(--muted-rgb) / <alpha-value>)',
           },
           fontFamily: {
             sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
             serif: ['Fraunces', 'Georgia', 'serif'],
             hand: ['Caveat', 'cursive'],
+            type: ['"Courier Prime"', 'ui-monospace', 'monospace'],
           },
         },
       },

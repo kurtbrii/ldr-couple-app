@@ -151,7 +151,8 @@
 
   // Small letter-spaced label — the stationery "section heading".
   function SectionLabel({ children, className = '' }) {
-    return html`<div className=${cx('text-[11px] font-semibold tracking-[0.16em] uppercase text-muted', className)}>${children}</div>`;
+    const { vintage } = LDR.useStyle();
+    return html`<div className=${cx('text-[11px] font-semibold tracking-[0.16em] uppercase text-muted', vintage && 'label-type', className)}>${children}</div>`;
   }
 
   /* ------------------------------------------------------------ Coins */
@@ -272,19 +273,35 @@
     const fg = tone === 'rose' ? '#8E514C' : '#5F6C57';
     return html`<span
       className="inline-flex items-center justify-center rounded-full font-serif shrink-0"
-      style=${{ width: size, height: size, background: bg, color: fg, fontSize: size * 0.44, border: '2px solid #FFF9F0' }}
+      style=${{ width: size, height: size, background: bg, color: fg, fontSize: size * 0.44, border: '2px solid var(--ivory)' }}
     >${name[0]}</span>`;
   }
 
   /* -------------------------------------------------------- Hunt Card */
 
-  // Tiny ✦ ornament used on card corners and motifs.
+  // Tiny ✦ ornament used on card corners and motifs (modern style).
   function Star4({ size = 14, color, className = '', style }) {
     return html`<svg width=${size} height=${size} viewBox="0 0 24 24" className=${className} style=${style} aria-hidden="true">
       <path d="M12 1 L13.8 10.2 L23 12 L13.8 13.8 L12 23 L10.2 13.8 L1 12 L10.2 10.2 Z" fill=${color} />
     </svg>`;
   }
   LDR.Star4 = Star4;
+
+  // Small postmark/wax-seal ring — the vintage-style equivalent of Star4.
+  function Postmark({ size = 14, color, className = '', style }) {
+    return html`<svg width=${size} height=${size} viewBox="0 0 24 24" className=${className} style=${style} aria-hidden="true">
+      <circle cx="12" cy="12" r="9.5" fill="none" stroke=${color} strokeWidth="1.4" strokeDasharray="2.2 2" />
+      <circle cx="12" cy="12" r="3" fill=${color} />
+    </svg>`;
+  }
+  LDR.Postmark = Postmark;
+
+  // Picks Star4 (modern) or Postmark (vintage) based on the current style.
+  function Motif(props) {
+    const { vintage } = LDR.useStyle();
+    return vintage ? html`<${Postmark} ...${props} />` : html`<${Star4} ...${props} />`;
+  }
+  LDR.Motif = Motif;
 
   /*
     HuntCardFront — the prompt side of a Hunt Card. Feels like a printed
@@ -297,7 +314,8 @@
       date, category: footer details.
   */
   function HuntCardFront({ prompt, tint = 'morningButter', tag = 'Your Hunt', date, category, owner }) {
-    const t = LDR.CARD_TINTS[tint];
+    const { vintage, tints } = LDR.useStyle();
+    const t = tints[tint];
     return html`<div
       className="relative w-full h-full cardstock grain grain-strong"
       style=${{ backgroundColor: t.face, containerType: 'inline-size', borderRadius: 'inherit' }}
@@ -309,24 +327,24 @@
         ['top-[8.5cqw] right-[8.5cqw]'],
         ['bottom-[8.5cqw] left-[8.5cqw]'],
         ['bottom-[8.5cqw] right-[8.5cqw]'],
-      ].map(([pos], i) => html`<${Star4} key=${i} size="5cqw" color=${t.ink} className=${cx('absolute opacity-60', pos)} style=${{ width: '4.5cqw', height: '4.5cqw' }} />`)}
+      ].map(([pos], i) => html`<${Motif} key=${i} size="5cqw" color=${t.ink} className=${cx('absolute opacity-60', pos)} style=${{ width: '4.5cqw', height: '4.5cqw' }} />`)}
 
       <div className="absolute inset-0 flex flex-col items-center px-[13cqw] pt-[14cqw] pb-[12cqw] text-center">
         <span
-          className="rounded-full px-[3.6cqw] py-[1.2cqw] font-semibold uppercase"
+          className=${cx('card-tag rounded-full px-[3.6cqw] py-[1.2cqw] font-semibold uppercase', vintage && 'label-type')}
           style=${{ fontSize: '3.6cqw', letterSpacing: '0.16em', background: 'rgba(255,249,240,0.75)', color: t.ink, boxShadow: `0 0 0 1px ${t.edge}` }}
         >${tag}</span>
 
         <div className="flex-1 flex flex-col items-center justify-center">
-          <${Star4} color=${t.ink} style=${{ width: '11cqw', height: '11cqw', marginBottom: '5cqw', opacity: 0.85 }} />
-          <div className="uppercase font-semibold" style=${{ fontSize: '3.4cqw', letterSpacing: '0.24em', color: t.ink, marginBottom: '3.5cqw', opacity: 0.85 }}>Today’s Hunt</div>
+          <${Motif} color=${t.ink} style=${{ width: '11cqw', height: '11cqw', marginBottom: '5cqw', opacity: 0.85 }} />
+          <div className=${cx('uppercase font-semibold', vintage && 'label-type')} style=${{ fontSize: '3.4cqw', letterSpacing: '0.24em', color: t.ink, marginBottom: '3.5cqw', opacity: 0.85 }}>Today’s Hunt</div>
           <div className="font-serif text-ink" style=${{ fontSize: '9.2cqw', lineHeight: 1.18, letterSpacing: '-0.01em', fontWeight: 400 }}>${prompt}</div>
         </div>
 
         <div className="flex items-center gap-[2cqw] text-muted" style=${{ fontSize: '3.4cqw', letterSpacing: '0.06em' }}>
           ${date ? html`<span className="font-serif italic" style=${{ fontSize: '4cqw' }}>${date}</span>` : null}
           ${date && (category || owner) ? html`<span style=${{ color: t.ink }}>·</span>` : null}
-          ${owner || category ? html`<span className="uppercase">${owner || category}</span>` : null}
+          ${owner || category ? html`<span className=${cx('uppercase', vintage && 'label-type')}>${owner || category}</span>` : null}
         </div>
       </div>
     </div>`;
@@ -339,15 +357,21 @@
     photo-landing animation (used right after Submit).
   */
   function HuntCardBack({ tint = 'morningButter', photo, locked, animatePlace, label, frame }) {
-    const t = LDR.CARD_TINTS[tint];
-    const pattern = `url("data:image/svg+xml;utf8,${encodeURIComponent(
-      `<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28'><path d='M14 9 L14.9 13.1 L19 14 L14.9 14.9 L14 19 L13.1 14.9 L9 14 L13.1 13.1 Z' fill='${t.ink}' opacity='0.16'/></svg>`
-    )}")`;
+    const { vintage, tints } = LDR.useStyle();
+    const t = tints[tint];
+    // Vintage uses a sparser postmark-ring pattern instead of a tight ✦ tile.
+    const pattern = vintage
+      ? `url("data:image/svg+xml;utf8,${encodeURIComponent(
+          `<svg xmlns='http://www.w3.org/2000/svg' width='46' height='46'><circle cx='23' cy='23' r='15' fill='none' stroke='${t.ink}' stroke-width='1' stroke-dasharray='2.4 2.4' opacity='0.16'/></svg>`
+        )}")`
+      : `url("data:image/svg+xml;utf8,${encodeURIComponent(
+          `<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28'><path d='M14 9 L14.9 13.1 L19 14 L14.9 14.9 L14 19 L13.1 14.9 L9 14 L13.1 13.1 Z' fill='${t.ink}' opacity='0.16'/></svg>`
+        )}")`;
     return html`<div
       className="relative w-full h-full cardstock grain grain-strong"
       style=${{ backgroundColor: t.back, containerType: 'inline-size', borderRadius: 'inherit' }}
     >
-      <div className="absolute inset-0" style=${{ backgroundImage: pattern, backgroundSize: '28px 28px', borderRadius: 'inherit' }} />
+      <div className="absolute inset-0" style=${{ backgroundImage: pattern, backgroundSize: vintage ? '46px 46px' : '28px 28px', borderRadius: 'inherit' }} />
       <div className="absolute inset-[4.5cqw] rounded-[3cqw]" style=${{ border: `1px solid ${t.edge}` }} />
       ${photo
         ? html`<div className="absolute inset-0 flex items-center justify-center px-[10cqw] pb-[8cqw]">
@@ -356,18 +380,18 @@
             </div>
           </div>`
         : html`<div className="absolute inset-0 flex items-center justify-center">
-            <${Star4} color=${t.ink} style=${{ width: '16cqw', height: '16cqw', opacity: 0.5 }} />
+            <${Motif} color=${t.ink} style=${{ width: '16cqw', height: '16cqw', opacity: 0.5 }} />
           </div>`}
       ${locked
         ? html`<div className="absolute bottom-[7cqw] left-0 right-0 flex justify-center z-10">
             <span
-              className=${cx('inline-flex items-center gap-[1.6cqw] rounded-full font-semibold uppercase', animatePlace && 'lock-stamp')}
+              className=${cx('inline-flex items-center gap-[1.6cqw] rounded-full font-semibold uppercase', vintage && 'label-type', animatePlace && 'lock-stamp')}
               style=${{
                 fontSize: '3.6cqw',
                 letterSpacing: '0.14em',
                 padding: '1.8cqw 4cqw',
-                background: '#FFF9F0',
-                color: '#3D3530',
+                background: 'var(--ivory)',
+                color: 'var(--ink)',
                 boxShadow: '0 2px 8px -2px rgba(92,64,44,0.35)',
                 transform: 'rotate(-3deg)',
                 animationDelay: animatePlace ? '700ms' : undefined,
@@ -495,7 +519,7 @@
         <span className="uppercase font-semibold" style=${{ fontSize: '1.9cqw', letterSpacing: '0.12em', marginTop: '0.3cqw' }}>${month.slice(0, 3)}</span>
       </div>
       <div>
-        <div className="font-serif uppercase" style=${{ fontSize: '3.6cqw', letterSpacing: '0.2em', color: tpl.dark ? '#E9E3D6' : '#3D3530' }}>${memory.date}</div>
+        <div className="font-serif uppercase" style=${{ fontSize: '3.6cqw', letterSpacing: '0.2em', color: tpl.dark ? '#E9E3D6' : 'var(--ink)' }}>${memory.date}</div>
         ${memory.weekday ? html`<div className="font-serif italic" style=${{ fontSize: '3cqw', color: tpl.dark ? '#AEB9C4' : '#887970' }}>${memory.weekday}</div>` : null}
       </div>
     </div>`;
@@ -536,7 +560,7 @@
   function ScrapbookPage({ memory, template, compose = false, showStickers = true, showMeta = true, names = { mine: 'Jubi', theirs: 'Kurt' }, className = '', style, children, frame }) {
     const tpl = LDR.TEMPLATES[template || memory.template] || LDR.TEMPLATES.classic;
     const frameId = frame || memory.frame || 'polaroid';
-    const textColor = tpl.dark ? '#E9E3D6' : '#3D3530';
+    const textColor = tpl.dark ? '#E9E3D6' : 'var(--ink)';
     const subColor = tpl.dark ? '#AEB9C4' : '#887970';
     const prints = [
       { side: 'mine', data: memory.mine, slot: tpl.slots[0], tape: tapeFor(tpl, 0), tapeColor: tpl.tapes[0], from: { fx: '-40cqw', fy: '30cqw', fr: '-14deg' }, react: memory.reactions?.onMine },
@@ -585,7 +609,7 @@
           ${showMeta && p.react
             ? html`<span
                 className=${cx('absolute flex items-center justify-center rounded-full', compose && 'stamp-in')}
-                style=${{ [p.side === 'mine' ? 'left' : 'right']: '-3cqw', bottom: '5cqw', width: '8cqw', height: '8cqw', fontSize: '4.4cqw', background: '#FFF9F0', boxShadow: '0 2px 6px -2px rgba(92,64,44,0.4), 0 0 0 1px rgba(201,130,125,0.35)', animationDelay: compose ? '1700ms' : undefined }}
+                style=${{ [p.side === 'mine' ? 'left' : 'right']: '-3cqw', bottom: '5cqw', width: '8cqw', height: '8cqw', fontSize: '4.4cqw', background: 'var(--ivory)', boxShadow: '0 2px 6px -2px rgba(92,64,44,0.4), 0 0 0 1px rgba(201,130,125,0.35)', animationDelay: compose ? '1700ms' : undefined }}
               >${p.react}</span>`
             : null}
         </div>`
@@ -645,6 +669,7 @@
     `badge` puts a soft rose dot on a tab (e.g. reveal ready on Today).
   */
   function TabBar({ active, onSelect, hidden, badge }) {
+    const { vintage } = LDR.useStyle();
     return html`<nav
       className=${cx('tabbar absolute left-3 right-3 bottom-3 z-40', hidden && 'tabbar-hidden')}
       aria-label="Main"
@@ -662,9 +687,9 @@
           >
             <span className="relative">
               <${Icon} name=${t.icon} size=${23} stroke=${on ? 1.9 : 1.6} />
-              ${badge === t.id ? html`<span className="absolute -top-0.5 -right-1 w-2.5 h-2.5 rounded-full bg-rose soft-pulse" style=${{ border: '2px solid #FFF9F0' }} />` : null}
+              ${badge === t.id ? html`<span className="absolute -top-0.5 -right-1 w-2.5 h-2.5 rounded-full bg-rose soft-pulse" style=${{ border: '2px solid var(--ivory)' }} />` : null}
             </span>
-            <span className=${cx('text-[10.5px] tracking-[0.12em] uppercase', on ? 'font-semibold' : 'font-medium')}>${t.label}</span>
+            <span className=${cx('text-[10.5px] tracking-[0.12em] uppercase', vintage && 'label-type', on ? 'font-semibold' : 'font-medium')}>${t.label}</span>
             <span className=${cx('absolute bottom-[7px] w-1 h-1 rounded-full bg-ink transition-opacity duration-300', on ? 'opacity-70' : 'opacity-0')} />
           </button>`;
         })}

@@ -5,6 +5,7 @@
     - all app state (in React memory only — refresh resets everything)
     - the action functions screens call (submit a photo, add to Our Story, buy…)
     - the navigator (flows, tabs, stacks)
+    - the Modern / Vintage style switch (data-theme on the phone element)
     - the phone frame, status bar and global toast
 
   Screens read state/actions through LDR.useStore() and navigate with
@@ -16,6 +17,39 @@
   const LDR = window.LDR;
   const html = LDR.html;
   const { useState, useMemo, useCallback, useRef, createContext, useContext } = React;
+
+  /*
+    useAppStyle — owns the Modern / Vintage prototype-comparison toggle
+    (see HANDOFF discussion: comparing the locked palette against a more
+    aged, vintage take before committing to either). Stored in memory only,
+    same as everything else; defaults to 'modern'.
+  */
+  function useAppStyle() {
+    const [name, setName] = useState('modern');
+    return useMemo(() => ({ name, setName }), [name]);
+  }
+
+  /*
+    StyleSwitch — small "Modern · Vintage" segmented control pinned outside
+    the phone frame (desktop only — see .style-switch in theme.css). Lets you
+    flip the whole app's look live to compare the two before picking one.
+  */
+  function StyleSwitch({ style }) {
+    const html = LDR.html;
+    const opts = [['modern', 'Modern'], ['vintage', 'Vintage']];
+    return html`<div className="style-switch">
+      <div className="surface grain flex items-center p-1 rounded-full gap-0.5" style=${{ boxShadow: 'var(--shadow-card)' }}>
+        ${opts.map(
+          ([id, label]) => html`<button
+            key=${id}
+            onClick=${() => style.setName(id)}
+            aria-pressed=${style.name === id}
+            className=${'h-8 px-3.5 rounded-full text-[12.5px] font-medium transition-colors ' + (style.name === id ? 'bg-ink text-ivory' : 'text-muted')}
+          >${label}</button>`
+        )}
+      </div>
+    </div>`;
+  }
 
   LDR.StoreContext = createContext(null);
   LDR.useStore = () => useContext(LDR.StoreContext);
@@ -176,18 +210,22 @@
   */
   function App() {
     const store = useAppStore();
+    const style = useAppStyle();
     const [navState, nav] = LDR.useNavigator();
     const badge = navState.tab !== 'today' && store.state.today.status === 'ready' ? 'today' : null;
 
     return html`<${LDR.StoreContext.Provider} value=${store}>
       <${LDR.NavContext.Provider} value=${nav}>
-        <div className="stage">
-          <div className="phone" id="phone">
-            <${StatusBar} />
-            <${LDR.NavigatorView} navState=${navState} nav=${nav} tabBadge=${badge} />
-            ${store.toast ? html`<${LDR.Toast} key=${store.toast.key}>${store.toast.text}<//>` : null}
+        <${LDR.StyleContext.Provider} value=${style}>
+          <div className="stage">
+            <${StyleSwitch} style=${style} />
+            <div className="phone" id="phone" data-theme=${style.name}>
+              <${StatusBar} />
+              <${LDR.NavigatorView} navState=${navState} nav=${nav} tabBadge=${badge} />
+              ${store.toast ? html`<${LDR.Toast} key=${store.toast.key}>${store.toast.text}<//>` : null}
+            </div>
           </div>
-        </div>
+        <//>
       <//>
     <//>`;
   }

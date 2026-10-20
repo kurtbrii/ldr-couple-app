@@ -18,14 +18,15 @@
   const LDR = window.LDR;
   const html = LDR.html;
   const { useState, useEffect, useRef } = React;
-  const { Screen, TopBar, PrimaryButton, TextLink, FlipCard, HuntCardFront, Sparkles, Icon } = LDR;
+  const { Screen, TopBar, PrimaryButton, TextLink, FlipCard, HuntCardFront, Sparkles, Icon, cx } = LDR;
 
   /*
     PhotoBack — the photo side of a card in the Reveal. The photo is the hero,
     so it fills the card, framed by a thin band of tinted cardstock.
   */
   function PhotoBack({ tint, photo, reaction, reactionBy }) {
-    const t = LDR.CARD_TINTS[tint];
+    const { tints } = LDR.useStyle();
+    const t = tints[tint];
     const p = LDR.photo(photo);
     return html`<div className="relative w-full h-full cardstock grain" style=${{ backgroundColor: t.back, containerType: 'inline-size', borderRadius: 'inherit' }}>
       <div className="absolute inset-[5cqw] bottom-[14cqw] rounded-[5cqw] overflow-hidden print-photo" style=${{ boxShadow: 'inset 0 0 0 1px rgba(61,53,48,0.08)' }}>
@@ -35,7 +36,7 @@
       ${reaction
         ? html`<span
             className="absolute flex items-center justify-center rounded-full react-pop"
-            style=${{ right: '2cqw', top: '2cqw', width: '17cqw', height: '17cqw', fontSize: '9cqw', background: '#FFF9F0', boxShadow: '0 3px 8px -3px rgba(92,64,44,0.45), 0 0 0 1.5px rgba(201,130,125,0.45)' }}
+            style=${{ right: '2cqw', top: '2cqw', width: '17cqw', height: '17cqw', fontSize: '9cqw', background: 'var(--ivory)', boxShadow: '0 3px 8px -3px rgba(92,64,44,0.45), 0 0 0 1.5px rgba(201,130,125,0.45)' }}
             title=${reactionBy ? reactionBy + ' reacted' : undefined}
           >${reaction}</span>`
         : null}
@@ -70,11 +71,12 @@
     handwritten note (tap to edit).
   */
   function CommentBox({ value, onSave }) {
+    const { vintage } = LDR.useStyle();
     const [draft, setDraft] = useState(value);
     const [editing, setEditing] = useState(!value);
     if (!editing && value) {
       return html`<button onClick=${() => setEditing(true)} className="w-full text-left surface grain px-4 py-3 fade-up">
-        <div className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted">Your note</div>
+        <div className=${cx('text-[11px] font-semibold tracking-[0.14em] uppercase text-muted', vintage && 'label-type')}>Your note</div>
         <div className="font-hand text-[22px] leading-tight mt-0.5">${value}</div>
       </button>`;
     }
@@ -109,6 +111,7 @@
     const already = params.revealed || t.status === 'revealed' || t.status === 'added';
     const [phase, setPhase] = useState(already ? 'revealed' : 'closed');
     const [theirReactionShown, setTheirReactionShown] = useState(already);
+    const { vintage } = LDR.useStyle();
     const timers = useRef([]);
     useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
@@ -143,7 +146,7 @@
         <div className="flex justify-between gap-3">
           ${[true, false].map(
             (mine) => html`<div key=${mine ? 'me' : 'them'} className="w-1/2 flex flex-col items-center">
-              <div key=${label(mine)} className="text-[11px] font-semibold tracking-[0.18em] uppercase text-muted mb-2.5 fade-in">${label(mine)}</div>
+              <div key=${label(mine)} className=${cx('text-[11px] font-semibold tracking-[0.18em] uppercase text-muted mb-2.5 fade-in', vintage && 'label-type')}>${label(mine)}</div>
               <div className="w-full" style=${{ transform: `rotate(${mine ? -2 : 2}deg)` }}>
                 <${FlipCard}
                   className="w-full aspect-[5/7]"

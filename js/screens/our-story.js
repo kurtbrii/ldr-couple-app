@@ -13,7 +13,7 @@
 (function () {
   const LDR = window.LDR;
   const html = LDR.html;
-  const { CoinPill, ScrapbookPage, Icon, Star4, Screen } = LDR;
+  const { CoinPill, ScrapbookPage, Icon, Star4, Screen, cx } = LDR;
 
   // Alternating tilt + offset so the pages feel hand-stacked, not gridded.
   const TILTS = [-1.4, 1.1, -0.6, 1.6, -1.1];
@@ -24,11 +24,12 @@
     The stats sit on a little paper label (stationery, not a dashboard).
   */
   function StoryHeader({ state, onCoins }) {
+    const { vintage } = LDR.useStyle();
     const { days, moments, photos } = state.stats;
     return html`<div className="safe-top px-6 pb-2">
       <div className="flex items-start justify-between pt-2">
         <div className="fade-up">
-          <div className="text-[12px] font-semibold tracking-[0.16em] uppercase text-muted">${state.partner.name} + ${state.user.name}</div>
+          <div className=${cx('text-[12px] font-semibold tracking-[0.16em] uppercase text-muted', vintage && 'label-type')}>${state.partner.name} + ${state.user.name}</div>
           <h1 className="font-serif text-[34px] leading-none tracking-[-0.025em] mt-1.5">Our Story</h1>
         </div>
         <div className="pt-1"><${CoinPill} amount=${state.coins} onClick=${onCoins} /></div>

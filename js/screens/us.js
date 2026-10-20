@@ -117,7 +117,7 @@
               aria-checked=${on}
               onClick=${() => actions.setHuntMode(m.n)}
               className="w-full surface grain flex items-center gap-4 px-4 py-4 text-left transition-shadow"
-              style=${{ boxShadow: on ? '0 0 0 2px #3D3530, var(--shadow-soft)' : undefined }}
+              style=${{ boxShadow: on ? '0 0 0 2px var(--ink), var(--shadow-soft)' : undefined }}
             >
               <span className="relative w-[54px] h-[54px] shrink-0">
                 ${Array.from({ length: Math.min(m.n, 3) }, (_, i) => html`<span

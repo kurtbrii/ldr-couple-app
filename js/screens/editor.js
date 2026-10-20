@@ -178,7 +178,7 @@
             >
               <span
                 className="block w-[64px] h-[84px] rounded-[6px] cardstock grain relative overflow-hidden"
-                style=${{ background: tpl.paper, boxShadow: on ? '0 0 0 2px #3D3530, var(--shadow-soft)' : 'var(--shadow-soft)', opacity: has ? 1 : 0.5 }}
+                style=${{ background: tpl.paper, boxShadow: on ? '0 0 0 2px var(--ink), var(--shadow-soft)' : 'var(--shadow-soft)', opacity: has ? 1 : 0.5 }}
               >
                 <span className="absolute left-[10%] top-[22%] w-[40%] h-[42%] bg-[#FFFDF8]" style=${{ transform: `rotate(${tpl.slots[0].r}deg)`, boxShadow: '0 1px 2px rgba(0,0,0,0.15)' }} />
                 <span className="absolute right-[10%] top-[34%] w-[40%] h-[42%] bg-[#FFFDF8]" style=${{ transform: `rotate(${tpl.slots[1].r}deg)`, boxShadow: '0 1px 2px rgba(0,0,0,0.15)' }} />
@@ -197,7 +197,7 @@
               aria-pressed=${on}
               className="w-[86px] flex flex-col items-center gap-1.5 active:scale-95 transition"
             >
-              <span className="block w-[62px] rounded-[4px] p-1" style=${{ boxShadow: on ? '0 0 0 2px #3D3530' : 'none', opacity: has ? 1 : 0.5 }}>
+              <span className="block w-[62px] rounded-[4px] p-1" style=${{ boxShadow: on ? '0 0 0 2px var(--ink)' : 'none', opacity: has ? 1 : 0.5 }}>
                 <${Polaroid} photo="plant" frame=${item.id} scaleText />
               </span>
               <span className="text-[11.5px] leading-tight text-center">${has ? item.name : `${item.price} 🪙`}</span>

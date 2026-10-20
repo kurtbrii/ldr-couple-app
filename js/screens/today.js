@@ -16,7 +16,7 @@
 (function () {
   const LDR = window.LDR;
   const html = LDR.html;
-  const { Screen, PrimaryButton, SecondaryButton, TextLink, CoinPill, HuntCardFront, HuntCardBack, FlipCard, Polaroid, ScrapbookPage, Icon, SectionLabel } = LDR;
+  const { Screen, PrimaryButton, SecondaryButton, TextLink, CoinPill, HuntCardFront, HuntCardBack, FlipCard, Polaroid, ScrapbookPage, Icon, SectionLabel, cx } = LDR;
 
   // Morning/afternoon/evening greeting from the local clock.
   function greeting() {
@@ -31,10 +31,11 @@
     The streak is shown, never used to pressure (no warnings anywhere).
   */
   function TodayHeader({ state, onCoins }) {
+    const { vintage } = LDR.useStyle();
     return html`<div className="safe-top px-6 pb-1">
       <div className="flex items-start justify-between pt-2">
         <div className="fade-up">
-          <div className="text-[12px] font-semibold tracking-[0.16em] uppercase text-muted">${state.today.date}</div>
+          <div className=${cx('text-[12px] font-semibold tracking-[0.16em] uppercase text-muted', vintage && 'label-type')}>${state.today.date}</div>
           <h1 className="font-serif text-[27px] leading-tight tracking-[-0.02em] mt-1">
             ${greeting()}, ${state.user.name} <span className="text-[22px] align-[2px]" aria-hidden="true">❤️</span>
           </h1>
@@ -118,10 +119,10 @@
     } else if (t.status === 'ready') {
       body = html`<div className="pt-6">
         <div className="relative mx-auto h-[300px]" style=${{ width: 'min(320px, 86%)' }}>
-          <div className="absolute left-[2%] top-[18px] w-[52%] aspect-[5/7] rounded-[18px] overflow-hidden fade-up" style=${{ transform: 'rotate(-7deg)', boxShadow: 'var(--shadow-card)' }}>
+          <div className="absolute left-[2%] top-[18px] w-[52%] aspect-[5/7] rounded-[18px] overflow-hidden card-shape fade-up" style=${{ transform: 'rotate(-7deg)', boxShadow: 'var(--shadow-card)' }}>
             <${HuntCardFront} prompt=${t.myPrompt} tint=${t.myTint} tag="Your card" />
           </div>
-          <div className="absolute right-[2%] top-0 w-[52%] aspect-[5/7] rounded-[18px] overflow-hidden fade-up" style=${{ transform: 'rotate(6deg)', boxShadow: 'var(--shadow-card)', animationDelay: '120ms' }}>
+          <div className="absolute right-[2%] top-0 w-[52%] aspect-[5/7] rounded-[18px] overflow-hidden card-shape fade-up" style=${{ transform: 'rotate(6deg)', boxShadow: 'var(--shadow-card)', animationDelay: '120ms' }}>
             <${HuntCardFront} prompt=${t.theirPrompt} tint=${t.theirTint} tag="Their card" />
           </div>
         </div>

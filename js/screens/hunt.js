@@ -101,7 +101,7 @@
             (c) => html`<span key=${c} className=${'absolute w-6 h-6 rounded-[3px] ' + c} style=${{ borderColor: 'rgba(255,249,240,0.85)' }} />`
           )}
           <div className="absolute inset-x-0 top-4 flex justify-center">
-            <span className="px-3 py-1 rounded-full text-[11px] tracking-[0.14em] uppercase font-semibold" style=${{ background: 'rgba(46,39,36,0.45)', color: '#FFF9F0' }}>Photo</span>
+            <span className="px-3 py-1 rounded-full text-[11px] tracking-[0.14em] uppercase font-semibold" style=${{ background: 'rgba(46,39,36,0.45)', color: 'var(--ivory)' }}>Photo</span>
           </div>
           <div className=${'absolute inset-0 bg-[#FFF9F0] pointer-events-none transition-opacity ' + (flash ? 'opacity-90 duration-75' : 'opacity-0 duration-300')} />
         </div>
@@ -110,7 +110,7 @@
           <button onClick=${() => setLibrary(true)} className="w-14 h-14 rounded-[14px] overflow-hidden active:scale-95 transition" style=${{ boxShadow: '0 0 0 2px #FFF9F0, 0 4px 10px -4px rgba(61,40,28,0.5)' }} aria-label="Choose from library">
             <img src=${LDR.photo('window').src} alt="" className="w-full h-full object-cover" />
           </button>
-          <button onClick=${shoot} aria-label="Take photo" className="w-[78px] h-[78px] rounded-full flex items-center justify-center active:scale-95 transition" style=${{ background: '#FFF9F0', boxShadow: '0 0 0 4px rgba(185,104,79,0.9), 0 10px 22px -8px rgba(185,104,79,0.7)' }}>
+          <button onClick=${shoot} aria-label="Take photo" className="w-[78px] h-[78px] rounded-full flex items-center justify-center active:scale-95 transition" style=${{ background: 'var(--ivory)', boxShadow: '0 0 0 4px rgba(185,104,79,0.9), 0 10px 22px -8px rgba(185,104,79,0.7)' }}>
             <span className="w-[62px] h-[62px] rounded-full grain" style=${{ background: '#B9684F' }} />
           </button>
           <div className="w-14" />
@@ -155,7 +155,7 @@
     if (phase === 'placing') {
       return html`<${Screen} bodyClass="flex flex-col items-center justify-center">
         <div className="relative" style=${{ width: 'min(250px, 66%)', aspectRatio: '5 / 7' }}>
-          <div className="absolute inset-0 rounded-[22px] overflow-hidden fade-up" style=${{ boxShadow: 'var(--shadow-card)', transform: 'rotate(-1.2deg)' }}>
+          <div className="absolute inset-0 rounded-[22px] overflow-hidden card-shape fade-up" style=${{ boxShadow: 'var(--shadow-card)', transform: 'rotate(-1.2deg)' }}>
             <${HuntCardBack} tint=${ctx.tint} photo=${params.photo} locked animatePlace label="my find" />
           </div>
           <${Sparkles} key="s" count=${10} spread=${150} />

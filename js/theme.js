@@ -4,6 +4,7 @@
   Shared design tokens for every screen:
     - COLORS:      the locked palette (HANDOFF §2). Use these, never ad-hoc hexes.
     - CARD_TINTS:  muted stationery paper tints for Hunt Cards (morning vs evening).
+    - CARD_TINTS_VINTAGE + StyleContext/useStyle: the Modern / Vintage style switch.
     - TEMPLATES:   scrapbook page templates (Classic, Love Letter, Sunday Morning, …).
                    A template decides paper colour, photo-slot layout, tape and accents.
     - STICKERS:    hand-drawn SVG sticker art, exposed as data URIs for <img>.
@@ -42,6 +43,37 @@
     eveningRose: { face: '#EDD8D2', edge: '#DDBDB4', ink: '#9E625C', back: '#E9D3CC', label: 'Evening' },
     eveningLavender: { face: '#E2DCE3', edge: '#CCC2CF', ink: '#7A6A80', back: '#DED7E0', label: 'Evening' },
     eveningBlue: { face: '#D9E0E2', edge: '#BFCACD', ink: '#5F7479', back: '#D5DDDF', label: 'Evening' },
+  };
+
+  /*
+    Vintage-style card tints (same keys). Aged manila, oat and faded sage for
+    mornings; rose-kraft, mauve-brown and slate for evenings. Lower in value
+    and warmer than the modern set, like stationery that has yellowed.
+  */
+  LDR.CARD_TINTS_VINTAGE = {
+    morningButter: { face: '#E6D3A8', edge: '#C9AE7B', ink: '#7A5A2B', back: '#DFCB9D', label: 'Morning' },
+    morningSage: { face: '#D6D6BC', edge: '#B4B693', ink: '#5E6748', back: '#CFD0B2', label: 'Morning' },
+    morningCream: { face: '#E8DBBE', edge: '#CBB78F', ink: '#7D6448', back: '#E1D2B1', label: 'Morning' },
+    eveningRose: { face: '#D9BBA9', edge: '#BC9884', ink: '#7E4A3C', back: '#D2B19E', label: 'Evening' },
+    eveningLavender: { face: '#CDBDB3', edge: '#AF998D', ink: '#66504A', back: '#C5B3A8', label: 'Evening' },
+    eveningBlue: { face: '#C4C9C6', edge: '#A3ABA6', ink: '#4E5D5C', back: '#BCC2BE', label: 'Evening' },
+  };
+
+  /*
+    Prototype style switch — 'modern' (the locked palette) or 'vintage'.
+    App() provides { name, setName }; components call useStyle() to pick
+    tints and motifs. The CSS half lives in theme.css §6.
+  */
+  LDR.StyleContext = React.createContext({ name: 'modern', setName: () => {} });
+
+  /*
+    useStyle — the current style plus what depends on it.
+    Returns: { name, setName, vintage (bool), tints (CARD_TINTS for this style) }
+  */
+  LDR.useStyle = () => {
+    const ctx = React.useContext(LDR.StyleContext);
+    const vintage = ctx.name === 'vintage';
+    return { ...ctx, vintage, tints: vintage ? LDR.CARD_TINTS_VINTAGE : LDR.CARD_TINTS };
   };
 
   /*
